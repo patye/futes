@@ -4,7 +4,20 @@ import glob
 import time
 import sys
 import json
-import syslog
+import logging
+
+logger = logging.getLogger("heating-logic")
+logger.setLevel(logging.INFO)
+# define file handler and set formatter
+formatter    = logging.Formatter('%(asctime)s : %(levelname)s : %(name)s : %(message)s')
+file_handler = logging.FileHandler('/var/log/heating/heating.log')
+file_handler.setFormatter(formatter)
+
+
+# add file handler to logger
+logger.addHandler(file_handler)
+
+
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
@@ -45,7 +58,6 @@ system = {
         }
 temporary = {}
 
-#device = filename.split("-")
 
 def read_temp_raw(dev):
    dev_file = dev + '/w1_slave'
@@ -77,15 +89,17 @@ def write_to_file(output,obj):
     data[obj] = output
     with open(path,"w") as outfile:
         json.dump(data, outfile) 
-        
+    logger.info(str(data))    
         
 def radiatorPump():
     with open(path,"r") as json_file:
       data = json.load(json_file)
-    if (int(data["status"]["Felso_futes"]) == 1 or int(data["status"]["Also_futes"]) == 1):
+    user_intention =  int(data["status"]["Felso_futes"]) == 1 \
+            or int(data["status"]["Also_futes"]) == 1
+    heat_in_puffer = float(data["temperature"]["Puffer1"]) > 65
+    if ( user_intention and heat_in_puffer ):
         data["status"]["Lakas_keringeto"] = 1
-
-    if (int(data["status"]["Felso_futes"]) == 0 and int(data["status"]["Also_futes"]) == 0):
+    else:
         data["status"]["Lakas_keringeto"] = 0
         
     write_to_file(data,None)
@@ -94,30 +108,16 @@ def fillPuffer():
     with open(path) as json_file:
       data = json.load(json_file)
     turn_off_temp = min(max(70,float(data["temperature"]["Puffer4"])+5),80)
-    turn_on_temp = min((turn_off_temp + 15),92)
-    syslog.syslog(syslog.LOG_INFO,"Puffertöltés kikapcsolása: : " + str(turn_off_temp))
-    syslog.syslog("Puffertöltés bekapcsolása: " + str(turn_on_temp))
+    turn_on_temp = min((turn_off_temp + 10),92)
 
 
-    if ( float(data["temperature"]["Kazan_kilepo"]) > turn_on_temp):
-          syslog.syslog("PUFFERTÖLTÉS BE")
+    if ( float(data["temperature"]["Kazan_kilepo"]) > turn_on_temp or int(data["status"]["Gazbojler"]) == 1 ):
           data["status"]["Puffertolto"] = 1
 
 
-    if ( float(data["temperature"]["Kazan_kilepo"]) < turn_off_temp):
-          syslog.syslog("PUFFERTÖLTÉS KI")
+    if ( float(data["temperature"]["Kazan_kilepo"]) < turn_off_temp and  int(data["status"]["Gazbojler"]) == 0 ):
           data["status"]["Puffertolto"] = 0
     write_to_file(data,None) 
-#    f = open("/home/pi/code/heating/datas", "r")
-#    firstline = f.readline()
-#    values = list(map(int, firstline.split()))
-#    system["status"]["Lakas_keringeto"] = values[0]
-#    system["status"]["Puffertolto"] = values[1]
-#    system["status"]["Gazbojler"] = values[2]
-#    system["status"]["Also_futes"] = values[3]
-#    system["status"]["Felso_futes"] = values[4]
-
-#    f.close()
 
 while True:
   device_folders = glob.glob(base_dir + '28*')

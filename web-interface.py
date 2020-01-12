@@ -29,7 +29,11 @@ def getactual():
   result += "</br>"
   result += "Felső szint fűtés: "
   result += "BEKAPCSOLT" if int(data["status"]["Felso_futes"]) == 1 else "KIKAPCSOLT"
-  result += " <a href=\"/control/Felso_futes/0\">Kikapcsolás</a>" if int(data["status"]["Felso_futes"]) == 1 else " <a href=\"/control/Felso_futes/1\">Bekapcsolás</a>" 
+  result += " <a href=\"/control/Felso_futes/0\">Kikapcsolás</a>" if int(data["status"]["Felso_futes"]) == 1 else " <a href=\"/control/Felso_futes/1\">Bekapcsolás</a><hr>" 
+  if (data["status"]["Puffertolto"] == 1):
+      result += "<img src=\"static/grundfos.jpg\" height=\"100px\">"
+  if (data["status"]["Lakas_keringeto"] == 1):
+      result += "<img src=\"static/wilo.jpg\" height=\"100px\">"
   return result
 
 
