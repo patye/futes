@@ -50,7 +50,8 @@ status = {
         "Puffertolto": 0,
         "Gazbojler": 0,
         "Also_futes": 0,
-        "Felso_futes": 0
+        "Felso_futes": 0,
+        "internal_temperature_ok": 1
         }
 system = {
         "temperature": temperature,
@@ -96,8 +97,10 @@ def radiatorPump():
       data = json.load(json_file)
     user_intention =  int(data["status"]["Felso_futes"]) == 1 \
             or int(data["status"]["Also_futes"]) == 1
-    heat_in_puffer = float(data["temperature"]["Puffer1"]) > 65
-    if ( user_intention and heat_in_puffer ):
+    heat_in_puffer = float(data["temperature"]["Puffer1"]) > 55 
+    internal_temperature_ok = 1 #ki kell alakítani a belső hőmérséklet függvényében történő fűtésszabályozást
+    data["status"]["internal_temperature_ok"] =  internal_temperature_ok
+    if ( user_intention and heat_in_puffer and not internal_temperature_ok ):
         data["status"]["Lakas_keringeto"] = 1
     else:
         data["status"]["Lakas_keringeto"] = 0
