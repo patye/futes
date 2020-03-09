@@ -22,11 +22,25 @@ def getactual():
   result += "Puffer4: " + data["temperature"]["Puffer4"] + "</br>"
   result += "Fűtés előre: " + data["temperature"]["Futes_elore"] + "</br>"
   result += "Fűtés vissza: " + data["temperature"]["Futes_vissza"] + "</br>"
+
+
+
+
+
+  result += "<hr>"
+  result += "Főkapcsoló: "
+  result += "BEKAPCSOLT" if int(data["status"]["internal_temperature_ok"]) == 0 else "KIKAPCSOLT"
+  result += " <a href=\"/fokapcsolo/1\">Kikapcsolás</a>" if int(data["status"]["internal_temperature_ok"]) == 0 else " <a href=\"/fokapcsolo/0\">Bekapcsolás</a>" 
+  result += "</br>"
+  
+
   result += "<hr>"
   result += "Alsó szint fűtés: "
   result += "BEKAPCSOLT" if int(data["status"]["Also_futes"]) == 1 else "KIKAPCSOLT"
   result += " <a href=\"/control/Also_futes/0\">Kikapcsolás</a>" if int(data["status"]["Also_futes"]) == 1 else " <a href=\"/control/Also_futes/1\">Bekapcsolás</a>" 
   result += "</br>"
+  
+  
   result += "Felső szint fűtés: "
   result += "BEKAPCSOLT" if int(data["status"]["Felso_futes"]) == 1 else "KIKAPCSOLT"
   result += " <a href=\"/control/Felso_futes/0\">Kikapcsolás</a>" if int(data["status"]["Felso_futes"]) == 1 else " <a href=\"/control/Felso_futes/1\">Bekapcsolás</a>" 
@@ -48,6 +62,16 @@ def change_control(szint, beki):
     return True
 
 
+def fokapcsolo_change(beki):
+    with open(path) as json_file:
+      data = json.load(json_file)
+    data["status"]["internal_temperature_ok"] = beki
+    with open(path,"w") as outfile:
+        json.dump(data, outfile)
+
+    return True
+
+
 @app.route('/')
 def hello_world():
   return getactual()
@@ -57,10 +81,16 @@ def hello_world():
 def control(szint,beki):
   syslog.syslog("Szint: " + szint + " | beki: " + beki)
   change_control(szint, beki)
-  print("Szint: " + szint + " | beki: " + beki)
   time.sleep(2)
   return redirect("/", code = 302)
 
+
+@app.route('/fokapcsolo/<beki>')
+def fokapcsolo(beki):
+  syslog.syslog("Fokapcsolo: | beki: " + beki)
+  fokapcsolo_change(beki)
+  time.sleep(1)
+  return redirect("/", code = 302)
 
 
 if __name__ == '__main__':

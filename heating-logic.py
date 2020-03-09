@@ -97,10 +97,9 @@ def radiatorPump():
       data = json.load(json_file)
     user_intention =  int(data["status"]["Felso_futes"]) == 1 \
             or int(data["status"]["Also_futes"]) == 1
+    demand_by_temperature = int(data["status"]["internal_temperature_ok"]) != 1
     heat_in_puffer = float(data["temperature"]["Puffer1"]) > 55 
-    internal_temperature_ok = 1 #ki kell alakítani a belső hőmérséklet függvényében történő fűtésszabályozást
-    data["status"]["internal_temperature_ok"] =  internal_temperature_ok
-    if ( user_intention and heat_in_puffer and not internal_temperature_ok ):
+    if ( user_intention and heat_in_puffer and demand_by_temperature):
         data["status"]["Lakas_keringeto"] = 1
     else:
         data["status"]["Lakas_keringeto"] = 0
