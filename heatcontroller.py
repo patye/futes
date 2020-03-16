@@ -70,7 +70,7 @@ while True:
         syslog.syslog("Puffer ertek: " + str(data["status"]["Puffertolto"]))
         myTosr0x.set_relay_position(1,int(data["status"]["Lakas_keringeto"]))
         myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"]))
-        myTosr0x.set_relay_position(3,int(data["status"]["Gazbojler"]))
+        myTosr0x.set_relay_position(3,int(data["status"]["Gazkazan"]))
         previous = data
         zona_also  = int(data["status"]["Also_futes"])
         zona_felso = int(data["status"]["Felso_futes"])

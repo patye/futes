@@ -1,10 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import os
 import glob
 import time
 import sys
 import json
 import logging
+import calendar
 
 logger = logging.getLogger("heating-logic")
 logger.setLevel(logging.INFO)
@@ -48,10 +49,11 @@ temperature = {
 status = {
         "Lakas_keringeto": 0,
         "Puffertolto": 0,
-        "Gazbojler": 0,
+        "Gazkazan": 0,
         "Also_futes": 0,
         "Felso_futes": 0,
-        "internal_temperature_ok": 1
+        "internal_temperature_ok": 1,
+        "eloremeno_min": 50,
         }
 system = {
         "temperature": temperature,
@@ -98,7 +100,7 @@ def radiatorPump():
     user_intention =  int(data["status"]["Felso_futes"]) == 1 \
             or int(data["status"]["Also_futes"]) == 1
     demand_by_temperature = int(data["status"]["internal_temperature_ok"]) != 1
-    heat_in_puffer = float(data["temperature"]["Puffer1"]) > 55 
+    heat_in_puffer = float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_min"]) 
     if ( user_intention and heat_in_puffer and demand_by_temperature):
         data["status"]["Lakas_keringeto"] = 1
     else:
@@ -112,14 +114,38 @@ def fillPuffer():
     turn_off_temp = min(max(70,float(data["temperature"]["Puffer4"])+5),80)
     turn_on_temp = min((turn_off_temp + 10),92)
 
-
-    if ( float(data["temperature"]["Kazan_kilepo"]) > turn_on_temp or int(data["status"]["Gazbojler"]) == 1 ):
+    #Puffertöltő bekapcsolás, ha megy a gázkazán, vagy meleg a fatüzelésű kazán
+    if ( float(data["temperature"]["Kazan_kilepo"]) > turn_on_temp or int(data["status"]["Gazkazan"]) == 1 ):
           data["status"]["Puffertolto"] = 1
 
-
-    if ( float(data["temperature"]["Kazan_kilepo"]) < turn_off_temp and  int(data["status"]["Gazbojler"]) == 0 ):
+    #Puffertöltő kikapcsolása fafűtés esetén - védi a fatüzelésű kazánk a kihűlés ellen
+    if ( float(data["temperature"]["Kazan_kilepo"]) < turn_off_temp and  int(data["status"]["Gazfutes"]) == 0 ):
           data["status"]["Puffertolto"] = 0
-    write_to_file(data,None) 
+
+    #Puffertöltő kikapcsolás ha letelt-e a beégetett érték
+    if ( ( int(data["status"]["puffertolto_off_schedule"]) + 90 <  calendar.timegm(time.gmtime()) ) and data["status"]["puffertolto_off_trigger"] == 1 and  data["status"]["Gazkazan"] == 0):
+        data["status"]["Puffertolto"] = 0
+        data["status"]["puffertolto_off_trigger"] = 0
+
+    write_to_file(data,None)
+def gazKazan():
+    
+    with open(path) as json_file:
+       data = json.load(json_file)
+    if ( int(data["status"]["internal_temperature_ok"]) == 1 or float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_max"]) or  int(data["status"]["Gazfutes"]) == 0):
+      data["status"]["Gazkazan"] = 0 
+      
+      #Puffertöltő kikapcsolás időzítés beállítása (hűti a gázkazánt, kiveszi a maradékhőt)
+      if ( int(data["status"]["Gazfutes"]) == 1):  #Csak gázfűtés esetében van rá szükség
+        data["status"]["puffertolto_off_schedule"] = calendar.timegm(time.gmtime())
+        data["status"]["puffertolto_off_trigger"] = 1
+        
+    elif ( int(data["status"]["Gazfutes"]) == 1 and int(data["status"]["internal_temperature_ok"]) == 0 and float(data["temperature"]["Puffer1"]) < int(data["status"]["eloremeno_min"]) ):
+      data["status"]["Gazkazan"] = 1 
+  #  else:
+  #    data["status"]["Gazkazan"] = 0 
+
+    write_to_file(data,None)
 
 while True:
   device_folders = glob.glob(base_dir + '28*')
@@ -130,4 +156,5 @@ while True:
   write_to_file(temporary,"temperature")
   fillPuffer()
   radiatorPump()
+  gazKazan()
   time.sleep(10)

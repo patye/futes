@@ -26,6 +26,11 @@ def getactual():
 
 
 
+  result += "<hr>"
+  result += "Üzemmód (csak akkor lehet átváltani, ha a kazánházban kézzel átállítottad a rendszert gázfűtésre): "
+  result += "GÁZ" if int(data["status"]["Gazfutes"]) == 1 else "FAFŰTÉS"
+  result += " <a href=\"/control/uzemmod/0\">Átváltás fafűtésre</a>" if int(data["status"]["Gazfutes"]) == 1 else " <a href=\"/control/uzemmod/1\">Átváltás gázfűtésre</a>" 
+  result += "</br>"
 
   result += "<hr>"
   result += "Főkapcsoló: "
@@ -72,6 +77,17 @@ def fokapcsolo_change(beki):
     return True
 
 
+def uzemmod_change(gaz):
+
+    with open(path) as json_file:
+      data = json.load(json_file)
+    data["status"]["Gazfutes"] = gaz
+    with open(path,"w") as outfile:
+        json.dump(data, outfile)
+
+    return True
+
+
 @app.route('/')
 def hello_world():
   return getactual()
@@ -92,6 +108,11 @@ def fokapcsolo(beki):
   time.sleep(1)
   return redirect("/", code = 302)
 
+@app.route('/control/uzemmod/<gaz>')
+def uzemmod(gaz):
+    uzemmod_change(gaz)
+    time.sleep(1)
+    return redirect("/", code = 302)
 
 if __name__ == '__main__':
   app.run(host="0.0.0.0", port="8080")
