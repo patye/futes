@@ -114,9 +114,14 @@ def fillPuffer():
     turn_off_temp = min(max(70,float(data["temperature"]["Puffer4"])+5),80)
     turn_on_temp = min((turn_off_temp + 10),92)
 
+    logger.info("Puffertolto off temp: " + str(turn_off_temp))
+
+
+
     #Puffertöltő bekapcsolás, ha megy a gázkazán, vagy meleg a fatüzelésű kazán
     if ( float(data["temperature"]["Kazan_kilepo"]) > turn_on_temp or int(data["status"]["Gazkazan"]) == 1 ):
           data["status"]["Puffertolto"] = 1
+          logger.info("Puffertolot bekapcs, mert gazkazan megy")
 
     #Puffertöltő kikapcsolása fafűtés esetén - védi a fatüzelésű kazánk a kihűlés ellen
     if ( float(data["temperature"]["Kazan_kilepo"]) < turn_off_temp and  int(data["status"]["Gazfutes"]) == 0 ):
@@ -126,6 +131,7 @@ def fillPuffer():
     if ( ( int(data["status"]["puffertolto_off_schedule"]) + 90 <  calendar.timegm(time.gmtime()) ) and data["status"]["puffertolto_off_trigger"] == 1 and  data["status"]["Gazkazan"] == 0):
         data["status"]["Puffertolto"] = 0
         data["status"]["puffertolto_off_trigger"] = 0
+        logger.info("Puffertolto kikapcs, mert letelt  a timeout")
 
     write_to_file(data,None)
 def gazKazan():

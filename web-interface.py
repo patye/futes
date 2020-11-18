@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from flask import Flask,redirect
+from flask import Flask,redirect,request
 import json
 import time
 import syslog
@@ -15,7 +15,9 @@ def getactual():
     data = json.load(json_file)
   # for temp in json.load(json_file):
  
-  result = "Kazán kilépő: " + data["temperature"]["Kazan_kilepo"] + "</br>"
+  result = "<!doctype html><html class=\"no-js\" lang=\"\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta http-equiv=\"refresh\" content=\"5\"></head>"
+  result += "<body>"
+  result += "Kazán kilépő: " + data["temperature"]["Kazan_kilepo"] + "</br>"
   result += "Puffer1: " + data["temperature"]["Puffer1"] + "</br>"
   result += "Puffer2: " + data["temperature"]["Puffer2"] + "</br>"
   result += "Puffer3: " + data["temperature"]["Puffer3"] + "</br>"
@@ -32,6 +34,11 @@ def getactual():
   result += " <a href=\"/control/uzemmod/0\">Átváltás fafűtésre</a>" if int(data["status"]["Gazfutes"]) == 1 else " <a href=\"/control/uzemmod/1\">Átváltás gázfűtésre</a>" 
   result += "</br>"
 
+  result += "<hr>"
+  result += " <a href=\"/tempupdateform\">Hőmérséklet módosítása</a>" 
+  result += "</br>"
+  
+  
   result += "<hr>"
   result += "Főkapcsoló: "
   result += "BEKAPCSOLT" if int(data["status"]["internal_temperature_ok"]) == 0 else "KIKAPCSOLT"
@@ -54,8 +61,38 @@ def getactual():
       result += "<img src=\"static/grundfos.jpg\" height=\"100px\">"
   if (data["status"]["Lakas_keringeto"] == 1):
       result += "<img src=\"static/wilo.jpg\" height=\"100px\">"
+  if (data["status"]["Gazkazan"] == 1):
+      result += "<img src=\"static/blue-flame-icon.jpg\" height=\"100px\">"
+  result += "</body></html>"
   return result
 
+def tempupdateformpage():
+
+    with open(path) as json_file:
+       data = json.load(json_file)
+
+    result = "<h2>Előremenő módosítása</h2>"
+    result += "<form action=\"tempupdateformpost\" method=\"post\">"
+    result += "<label for=\"eloremeno_min\">Előremenő min: </label><br>"
+    result += "<input type=\"number\" name=\"eloremeno_min\" value="
+    result += str(data["status"]["eloremeno_min"])
+    result += ">"
+    result += "<input min=\"30\" max=\"70\"  type=\"submit\" value=\"Mentés\"> </form>" 
+    return result
+
+
+@app.route('/tempupdateformpost', methods=['POST'])
+def tempupdateformpost():
+    eloremeno_min=int(request.form['eloremeno_min'])
+    with open(path) as json_file:
+      data = json.load(json_file)
+    data["status"]["eloremeno_min"] = eloremeno_min
+    data["status"]["eloremeno_max"] = eloremeno_min + 10
+
+    with open(path,"w") as outfile:
+        json.dump(data, outfile)
+
+    return redirect("/", code = 302)
 
 def change_control(szint, beki):
     with open(path) as json_file:
@@ -98,8 +135,8 @@ def control(szint,beki):
   syslog.syslog("Szint: " + szint + " | beki: " + beki)
   change_control(szint, beki)
   time.sleep(2)
-  return redirect("/", code = 302)
 
+  return redirect("/", code = 302)
 
 @app.route('/fokapcsolo/<beki>')
 def fokapcsolo(beki):
@@ -113,6 +150,10 @@ def uzemmod(gaz):
     uzemmod_change(gaz)
     time.sleep(1)
     return redirect("/", code = 302)
+
+@app.route('/tempupdateform')
+def tempupdateform():
+    return tempupdateformpage() 
 
 if __name__ == '__main__':
   app.run(host="0.0.0.0", port="8080")
