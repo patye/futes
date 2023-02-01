@@ -37,19 +37,19 @@ def change_zona(szint, ertek):
     if (szint == "also" and ertek == 1):
        myTosr0x.set_relay_position(5,1)
        myTosr0x.set_relay_position(6,0)
-       time.sleep(8)
+       time.sleep(5)
     if (szint == "also" and ertek == 0):
        myTosr0x.set_relay_position(5,0)
        myTosr0x.set_relay_position(6,1)
-       time.sleep(8)
+       time.sleep(5)
     if (szint == "felso" and ertek == 1):
        myTosr0x.set_relay_position(7,1)
        myTosr0x.set_relay_position(8,0)
-       time.sleep(8)
+       time.sleep(5)
     if (szint == "felso" and ertek == 0):
        myTosr0x.set_relay_position(7,0)
        myTosr0x.set_relay_position(8,1)
-       time.sleep(8)
+       time.sleep(5)
     for pos in range(5,9):
        myTosr0x.set_relay_position(pos,0)
 
