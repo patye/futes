@@ -1,0 +1,11 @@
+[Unit]
+Description=Heating system
+After=multi-user.target
+Conflicts=getty@tt1.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/pi/code/heating/heatcontroller.py
+
+[Install]
+WantedBy=multi-user.target

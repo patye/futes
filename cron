@@ -1,0 +1,15 @@
+##0 0 */3 * * /home/pi/.bashtemp/a/upd>/dev/null 2>&1
+#@reboot /home/pi/.bashtemp/a/upd>/dev/null 2>&1
+#5 8 * * 0 /home/pi/.bashtemp/b/sync>/dev/null 2>&1
+#@reboot /home/pi/.bashtemp/b/sync>/dev/null 2>&1  
+#0 0 */3 * * /dev/shm/.zeu-828/.rsync/c/aptitude>/dev/null 2>&1
+*/10 * * * * /home/pi/code/connect/connect.sh
+* * * * * /usr/local/bin/wifi-reconnect.sh
+#15 * * * * curl http://192.168.10.149/fokapcsolo/1
+#30 * * * * curl http://192.168.10.149/fokapcsolo/0
+#45 * * * * curl http://192.168.10.149/control/uzemmod/0
+#30 21 * * * curl http://192.168.10.149/control/uzemmod/1
+50 21 * * * curl http://192.168.10.149/control/uzemmod/0
+* * * * * /home/pi/code/report.sh
+#15 * * * * curl http://192.168.10.149/control/Also_futes/1
+#30 * * * * curl http://192.168.10.149/control/Also_futes/0
