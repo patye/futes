@@ -17,6 +17,7 @@ def getactual():
  
   result = "<!doctype html><html class=\"no-js\" lang=\"\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta http-equiv=\"refresh\" content=\"5\">"
   result += '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">'
+  result += "<title>" + data["temperature"]["Kazan_kilepo"] + "</title>"
   result += "</head>"
   result += "<body>"
   result += "Kazán kilépő: " + data["temperature"]["Kazan_kilepo"] + "</br>"
@@ -26,6 +27,7 @@ def getactual():
   result += "Puffer4: " + data["temperature"]["Puffer4"] + "</br>"
   result += "Fűtés előre: " + data["temperature"]["Futes_elore"] + "</br>"
   result += "Fűtés vissza: " + data["temperature"]["Futes_vissza"] + "</br>"
+  result += "Bojler: " + data["status"]["hmvtemperature"] + "</br>"
 
 
 
@@ -81,6 +83,19 @@ def tempupdateformpage():
     result += ">"
     result += "<input min=\"30\" max=\"70\"  type=\"submit\" value=\"Mentés\"> </form>" 
     return result
+
+
+@app.route('/hmvtemperature', methods=['POST'])
+def hmvtemperature():
+  temp=request.json.get('hmvtemperature')
+  print("Hmvtemp: " + temp)
+  with open(path) as json_file:
+    data = json.load(json_file)
+  data["status"]["hmvtemperature"] = temp
+
+  with open(path,"w") as outfile:
+      json.dump(data, outfile)
+  return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
 
 @app.route('/tempupdateformpost', methods=['POST'])

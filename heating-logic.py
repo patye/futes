@@ -111,10 +111,11 @@ def radiatorPump():
 def fillPuffer():
     with open(path) as json_file:
       data = json.load(json_file)
-    turn_off_temp = min(max(70,float(data["temperature"]["Puffer4"])+5),80)
+    turn_off_temp = min(max(60,float(data["temperature"]["Puffer4"])+5),80)
     turn_on_temp = min((turn_off_temp + 10),92)
 
     logger.info("Puffertolto off temp: " + str(turn_off_temp))
+    logger.info("Puffertolto on temp: " + str(turn_on_temp))
 
 
 
