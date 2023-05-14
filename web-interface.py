@@ -9,10 +9,13 @@ import syslog
 app = Flask(__name__)
 
 path = "/home/pi/code/system-json.txt"
+hmv = "/home/pi/code/hmvdata.json"
 def getactual():
 
   with open(path) as json_file:
     data = json.load(json_file)
+  with open(hmv) as json_file:
+    hmvdata = json.load(json_file)
   # for temp in json.load(json_file):
  
   result = "<!doctype html><html class=\"no-js\" lang=\"\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta http-equiv=\"refresh\" content=\"5\">"
@@ -27,7 +30,7 @@ def getactual():
   result += "Puffer4: " + data["temperature"]["Puffer4"] + "</br>"
   result += "Fűtés előre: " + data["temperature"]["Futes_elore"] + "</br>"
   result += "Fűtés vissza: " + data["temperature"]["Futes_vissza"] + "</br>"
-  result += "Bojler: " + data["status"]["hmvtemperature"] + "</br>"
+  result += "Bojler: " + hmvdata["hmv"] + "</br>"
 
 
 
@@ -89,11 +92,11 @@ def tempupdateformpage():
 def hmvtemperature():
   temp=request.json.get('hmvtemperature')
   print("Hmvtemp: " + temp)
-  with open(path) as json_file:
+  with open(hmv) as json_file:
     data = json.load(json_file)
-  data["status"]["hmvtemperature"] = temp
+  data["hmv"] = temp
 
-  with open(path,"w") as outfile:
+  with open(hmv,"w") as outfile:
       json.dump(data, outfile)
   return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
