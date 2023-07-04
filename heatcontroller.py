@@ -69,8 +69,9 @@ while True:
       if (data != previous):
         syslog.syslog("Puffer ertek: " + str(data["status"]["Puffertolto"]))
         myTosr0x.set_relay_position(1,int(data["status"]["Lakas_keringeto"]))
-        myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"]))
-        myTosr0x.set_relay_position(3,int(data["status"]["Gazkazan"]))
+      #  myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"])) #tel
+        myTosr0x.set_relay_position(3,int(data["status"]["Gazkazan"]))  
+        myTosr0x.set_relay_position(4,int(data["status"]["Gazkazan"]))  #nyar
         previous = data
         zona_also  = int(data["status"]["Also_futes"])
         zona_felso = int(data["status"]["Felso_futes"])

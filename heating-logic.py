@@ -129,7 +129,7 @@ def fillPuffer():
           data["status"]["Puffertolto"] = 0
 
     #Puffertöltő kikapcsolás ha letelt-e a beégetett érték
-    if ( ( int(data["status"]["puffertolto_off_schedule"]) + 90 <  calendar.timegm(time.gmtime()) ) and data["status"]["puffertolto_off_trigger"] == 1 and  data["status"]["Gazkazan"] == 0):
+    if ( ( int(data["status"]["puffertolto_off_schedule"]) + 180 <  calendar.timegm(time.gmtime()) ) and data["status"]["puffertolto_off_trigger"] == 1 and  data["status"]["Gazkazan"] == 0):
         data["status"]["Puffertolto"] = 0
         data["status"]["puffertolto_off_trigger"] = 0
         logger.info("Puffertolto kikapcs, mert letelt  a timeout")
@@ -139,7 +139,7 @@ def gazKazan():
     
     with open(path) as json_file:
        data = json.load(json_file)
-    if ( int(data["status"]["internal_temperature_ok"]) == 1 or float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_max"]) or  int(data["status"]["Gazfutes"]) == 0):
+    if ( int(data["status"]["internal_temperature_ok"]) == 1 or float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_max"]) or  int(data["status"]["Gazfutes"]) == 0) :
       data["status"]["Gazkazan"] = 0 
       
       #Puffertöltő kikapcsolás időzítés beállítása (hűti a gázkazánt, kiveszi a maradékhőt)
