@@ -31,8 +31,7 @@ def getactual():
   result += "Fűtés előre: " + data["temperature"]["Futes_elore"] + "</br>"
   result += "Fűtés vissza: " + data["temperature"]["Futes_vissza"] + "</br>"
   result += "Bojler: " + hmvdata["hmv"] + "</br>"
-
-
+  result += "Melegviz: " + str(data["status"]["Melegviz"]) + "</br>"
 
 
   result += "<hr>"
@@ -174,6 +173,8 @@ def uzemmod(gaz):
 @app.route('/tempupdateform')
 def tempupdateform():
     return tempupdateformpage() 
+
+
 
 if __name__ == '__main__':
   app.run(host="0.0.0.0", port="8080")

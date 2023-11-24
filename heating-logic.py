@@ -120,7 +120,7 @@ def fillPuffer():
 
 
     #Puffertöltő bekapcsolás, ha megy a gázkazán, vagy meleg a fatüzelésű kazán
-    if ( float(data["temperature"]["Kazan_kilepo"]) > turn_on_temp or int(data["status"]["Gazkazan"]) == 1 ):
+    if ( float(data["temperature"]["Kazan_kilepo"]) > turn_on_temp or ( int(data["status"]["Gazkazan"]) == 1 and int(data["status"]["Melegviz"]) == 0 )):
           data["status"]["Puffertolto"] = 1
           logger.info("Puffertolot bekapcs, mert gazkazan megy")
 

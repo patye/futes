@@ -4,7 +4,7 @@
 #1 - lakas keringeto
 #2 - puffertolto
 #3 - kazan on-off
-#4 - ures
+#4 - melegviz tolto
 #5 - also nyit
 #6 - also zar
 #7 - felso-nyit
@@ -68,10 +68,11 @@ while True:
 
       if (data != previous):
         syslog.syslog("Puffer ertek: " + str(data["status"]["Puffertolto"]))
+        syslog.syslog("melegviz tolto: " + str(data["status"]["Melegviz"]))
         myTosr0x.set_relay_position(1,int(data["status"]["Lakas_keringeto"]))
-      #  myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"])) #tel
+        myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"])) #tel
         myTosr0x.set_relay_position(3,int(data["status"]["Gazkazan"]))  
-        myTosr0x.set_relay_position(4,int(data["status"]["Gazkazan"]))  #nyar
+        myTosr0x.set_relay_position(4,int(data["status"]["Melegviz"]))  #nyar
         previous = data
         zona_also  = int(data["status"]["Also_futes"])
         zona_felso = int(data["status"]["Felso_futes"])
