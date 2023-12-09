@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from flask import Flask,redirect,request
+from flask import Flask, redirect, request, render_template
 import json
 import time
 import syslog
@@ -17,7 +17,11 @@ def getactual():
   with open(hmv) as json_file:
     hmvdata = json.load(json_file)
   # for temp in json.load(json_file):
- 
+  return render_template(
+      "index.html",
+      data,
+      hmvdata
+  )
   result = "<!doctype html><html class=\"no-js\" lang=\"\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta http-equiv=\"refresh\" content=\"5\">"
   result += '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">'
   result += "<title>" + data["temperature"]["Kazan_kilepo"] + "</title>"
@@ -70,7 +74,7 @@ def getactual():
   if (data["status"]["Gazkazan"] == 1):
       result += "<img src=\"static/blue-flame-icon.jpg\" height=\"100px\">"
   result += "</body></html>"
-  return result
+  #return result
 
 def tempupdateformpage():
 
