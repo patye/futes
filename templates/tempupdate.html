@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="5">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">'
+    <title> {{ data["temperature"]["Kazan_kilepo"] }} </title>
+</head>
+</head>
+<body>
+    <h2>Előremenő módosítása</h2>
+    <form action="tempupdateformpost" method="post">
+    <label for="eloremeno_min">Előremenő min: </label><br>
+    <input type="number" name="eloremeno_min" value={{ data["status"]["eloremeno_min"]}}>
+    <input min="30" max="70"  type="submit" value="Mentés"> </form>
+</body>
+</html>
