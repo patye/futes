@@ -114,11 +114,27 @@ def uzemmod(gaz):
     time.sleep(1)
     return redirect("/", code = 302)
 
+@app.route('/control/melegviz/<beki>')
+def melegviz(beki):
+    with open(path) as json_file:
+        data = json.load(json_file)
+    data["status"]["Melegviz"] = beki
+    with open(path, "w") as outfile:
+        json.dump(data, outfile)
+    time.sleep(1)
+    return redirect("/", code = 302)
+
 @app.route('/tempupdateform')
 def tempupdateform():
     return tempupdateformpage() 
 
-
+@app.route('/xmaslight/<beki>')
+def xmaslight(beki):
+    with open(path) as json_file:
+      data = json.load(json_file)
+      data["status"]["xmaslight"] = beki
+      with open(path,"w") as outfile:
+          json.dump(data,outfile)
 
 if __name__ == '__main__':
   app.run(host="0.0.0.0", port="8080")

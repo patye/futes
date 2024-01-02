@@ -139,17 +139,26 @@ def gazKazan():
     
     with open(path) as json_file:
        data = json.load(json_file)
-    if ( int(data["status"]["internal_temperature_ok"]) == 1 or float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_max"]) or  int(data["status"]["Gazfutes"]) == 0) :
-      data["status"]["Gazkazan"] = 0 
+    #Gazkazan kikapcsolasa, ha nincs
+    if (
+            (int(data["status"]["internal_temperature_ok"]) == 1
+            or float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_max"])
+            or int(data["status"]["Gazfutes"]) == 0) \
+            and int(data["status"]["Melegviz"]) == 0
+       ):
+          data["status"]["Gazkazan"] = 0
       
       #Puffertöltő kikapcsolás időzítés beállítása (hűti a gázkazánt, kiveszi a maradékhőt)
-      if ( int(data["status"]["Gazfutes"]) == 1):  #Csak gázfűtés esetében van rá szükség
-        data["status"]["puffertolto_off_schedule"] = calendar.timegm(time.gmtime())
-        data["status"]["puffertolto_off_trigger"] = 1
+    if (
+            int(data["status"]["Gazfutes"]) == 1):  #Csak gázfűtés esetében van rá szükség
+               data["status"]["puffertolto_off_schedule"] = calendar.timegm(time.gmtime())
+               data["status"]["puffertolto_off_trigger"] = 1
         
     elif ( int(data["status"]["Gazfutes"]) == 1 and int(data["status"]["internal_temperature_ok"]) == 0 and float(data["temperature"]["Puffer1"]) < int(data["status"]["eloremeno_min"]) ):
-      data["status"]["Gazkazan"] = 1 
-  #  else:
+      data["status"]["Gazkazan"] = 1
+    elif (int(data["status"]["Melegviz"] == 1)):
+      data["status"]["Gazkazan"] = 1
+    #  else:
   #    data["status"]["Gazkazan"] = 0 
 
     write_to_file(data,None)

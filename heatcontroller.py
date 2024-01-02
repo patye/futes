@@ -9,6 +9,7 @@
 #6 - also zar
 #7 - felso-nyit
 #8 - felso zar
+#8 - karacsonyi fenyek
 
 import time
 import tosr0x
@@ -42,15 +43,15 @@ def change_zona(szint, ertek):
        myTosr0x.set_relay_position(5,0)
        myTosr0x.set_relay_position(6,1)
        time.sleep(5)
-    if (szint == "felso" and ertek == 1):
-       myTosr0x.set_relay_position(7,1)
-       myTosr0x.set_relay_position(8,0)
-       time.sleep(5)
-    if (szint == "felso" and ertek == 0):
-       myTosr0x.set_relay_position(7,0)
-       myTosr0x.set_relay_position(8,1)
-       time.sleep(5)
-    for pos in range(5,9):
+   # if (szint == "felso" and ertek == 1):
+     #  myTosr0x.set_relay_position(7,1)
+     #  myTosr0x.set_relay_position(8,0)
+     #  time.sleep(5)
+   # if (szint == "felso" and ertek == 0):
+     #  myTosr0x.set_relay_position(7,0)
+     #  myTosr0x.set_relay_position(8,1)
+     #  time.sleep(5)
+    for pos in range(5,7):
        myTosr0x.set_relay_position(pos,0)
 
 
@@ -70,9 +71,9 @@ while True:
         syslog.syslog("Puffer ertek: " + str(data["status"]["Puffertolto"]))
         syslog.syslog("melegviz tolto: " + str(data["status"]["Melegviz"]))
         myTosr0x.set_relay_position(1,int(data["status"]["Lakas_keringeto"]))
-        myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"])) #tel
+        myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"]))
         myTosr0x.set_relay_position(3,int(data["status"]["Gazkazan"]))  
-        myTosr0x.set_relay_position(4,int(data["status"]["Melegviz"]))  #nyar
+        myTosr0x.set_relay_position(4,int(data["status"]["Melegviz"]))
         previous = data
         zona_also  = int(data["status"]["Also_futes"])
         zona_felso = int(data["status"]["Felso_futes"])

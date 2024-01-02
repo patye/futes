@@ -1,76 +1,90 @@
 <!doctype html>
 <html class="no-js" lang="">
 <head>
-    <meta name="viewport" content=\"width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="refresh" content="5">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <title> {{ data["temperature"]["Kazan_kilepo"] }} </title>
 </head>
 <body style="padding: 10px">
- Kazán kilépő: {{ data["temperature"]["Kazan_kilepo"] }} </br>
- Puffer1: {{ data["temperature"]["Puffer1"] }} </br>
- Puffer2: {{ data["temperature"]["Puffer2"] }} </br>
- Puffer3: {{ data["temperature"]["Puffer3"] }} </br>
- Puffer4: {{ data["temperature"]["Puffer4"] }} </br>
- Fűtés előre: {{ data["temperature"]["Futes_elore"] }} </br>
- Fűtés vissza: {{ data["temperature"]["Futes_vissza"] }} </br>
- Bojler: {{ hmvdata["hmv"] }} </br>
- Melegviz: {{ data["status"]["Melegviz"] }} </br>
+Kazán kilépő: {{ data["temperature"]["Kazan_kilepo"] }} </br>
+Puffer1: {{ data["temperature"]["Puffer1"] }} </br>
+Puffer2: {{ data["temperature"]["Puffer2"] }} </br>
+Puffer3: {{ data["temperature"]["Puffer3"] }} </br>
+Puffer4: {{ data["temperature"]["Puffer4"] }} </br>
+Fűtés előre: {{ data["temperature"]["Futes_elore"] }} </br>
+Fűtés vissza: {{ data["temperature"]["Futes_vissza"] }} </br>
 
 
-  <hr>
-  Üzemmód (csak akkor lehet átváltani, ha a kazánházban kézzel átállítottad a rendszert gázfűtésre):
-  {% if  data["status"]["Gazfutes"] == 1  %}
-  GÁZ
-  {% else %}
-  FAFŰTÉS
-  {% endif %}
-
-  {% if  data["status"]["Gazfutes"] == 1  %}
-  <a href="/control/uzemmod/0">Átváltás fafűtésre</a>
-  {% else %}
-  <a href="/control/uzemmod/1">Átváltás gázfűtésre</a>
-  {% endif %}
+{% if  data["status"]["Melegviz"] == "1"  %}
+<a href="/control/melegviz/0" class="btn btn-danger">Melegvíz ki ({{ hmvdata["hmv"] }})  &deg;C</a>
+{% elif data["status"]["Melegviz"] == "0" %}
+    <a href="/control/melegviz/1"  class="btn btn-primary">Melegvíz be ({{ hmvdata["hmv"] }}) &deg;C</a>
+{% endif %}
 
 
-  <hr>
-   <a href="/tempupdateform">Hőmérséklet módosítása</a>
-  </br>
+<hr>
+Üzemmód (csak akkor lehet átváltani, ha a kazánházban kézzel átállítottad a rendszert gázfűtésre):
+{% if  data["status"]["Gazfutes"] == 1  %}
+    GÁZ
+{% else %}
+    FAFŰTÉS
+{% endif %}
+
+{% if  data["status"]["Gazfutes"] == 1  %}
+    <a href="/control/uzemmod/0">Átváltás fafűtésre</a>
+{% else %}
+    <a href="/control/uzemmod/1">Átváltás gázfűtésre</a>
+{% endif %}
 
 
-  <hr>
-  Főkapcsoló:
-   {% if  data["status"]["internal_temperature_ok"] == 0  %}
-       BEKAPCSOLT <a href="/fokapcsolo/1">Kikapcsolás</a>
-   {% else %}
-       KIKAPCSOLT <a href="/fokapcsolo/0">Bekapcsolás</a>
-    {% endif %}
+<hr>
+<a href="/tempupdateform">Hőmérséklet módosítása</a>
+</br>
 
-  </br>
-  <hr>
-  Alsó szint fűtés:
 
-   {% if  data["status"]["Also_futes"] == 1  %}
-       BEKAPCSOLT <a href="/Also_futes/0"> Kikapcsolás</a>
-   {% else %}
-       KIKAPCSOLT <a href="/Also_futes/1"> Bekapcsolás</a>
-    {% endif %}
+<hr>
+Főkapcsoló:
+{% if  data["status"]["internal_temperature_ok"] == 0  %}
+    BEKAPCSOLT <a href="/fokapcsolo/1">Kikapcsolás</a>
+{% else %}
+    KIKAPCSOLT <a href="/fokapcsolo/0">Bekapcsolás</a>
+{% endif %}
+
+</br>
+<hr>
+Alsó szint fűtés:
+
+{% if  data["status"]["Also_futes"] == 1  %}
+    BEKAPCSOLT <a href="/control/Also_futes/0"> Kikapcsolás</a>
+{% else %}
+    KIKAPCSOLT <a href="/control/Also_futes/1"> Bekapcsolás</a>
+{% endif %}
 <br>
-  Felső szint fűtés:
 
-   {% if  data["status"]["Felso_futes"] == 1  %}
-       BEKAPCSOLT <a href="/Felso_futes/0"> Kikapcsolás</a>
-   {% else %}
-       KIKAPCSOLT <a href="/Felso_futes/1"> Bekapcsolás</a>
-    {% endif %}
- <hr>
-    {% if data["status"]["Puffertolto"] == 1 %}
-  <img src="static/grundfos.jpg" height="100px">
-    {% endif %}
-   {% if data["status"]["Lakas_keringeto"] == 1 %}
-  <img src="static/wilo.jpg" height="100px">
-    {% endif %}
-   {% if data["status"]["Gazkazan"] == 1 %}
-  <img src="static/blue-flame-icon.jpg" height="100px">
-    {% endif %}
+{% if  data["status"]["xmaslight"] == 1  %}
+    Karácsonyi fények <a href="/xmaslight/0"> Kikapcsolás</a>
+{% else %}
+    Karácsonyi fények <a href="/xmaslight/1"> Bekapcsolás</a>
+{% endif %}
+<hr>
+
+Felső szint fűtése
+{% if  data["status"]["Felso_futes"] == 1  %}
+    BEKAPCSOLT <a href="/control/Felso_futes/0"> Kikapcsolás</a>
+{% else %}
+    KIKAPCSOLT <a href="/control/Felso_futes/1"> Bekapcsolás</a>
+{% endif %}
+<hr>
+{% if data["status"]["Puffertolto"] == 1 %}
+    <img src="static/grundfos.jpg" height="100px">
+{% endif %}
+{% if data["status"]["Lakas_keringeto"] == 1 %}
+    <img src="static/wilo.jpg" height="100px">
+{% endif %}
+{% if data["status"]["Gazkazan"] == 1 %}
+    <img src="static/blue-flame-icon.jpg" height="100px">
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </body>
