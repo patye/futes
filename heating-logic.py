@@ -22,20 +22,8 @@ logger.addHandler(file_handler)
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
-base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
-device_folders = glob.glob(base_dir + '28*')
-device_file = device_folder + '/w1_slave'
 path = "/home/pi/code/system-json.txt"
-sensors = {
-  "000002cc5842": "Kazan_kilepo",
-  "00000724371b": "Futes_elore",
-  "00000723b2b2": "Futes_vissza",
-  "0000064ff9ea": "Puffer1",
-  "0000072411c1": "Puffer2",
-  "000002cc42b9": "Puffer3",
-  "0000063759a7": "Puffer4"
-        }
+temperaturefile = "/home/pi/code/temperature.json"
 temperature = {
         
         "Kazan_kilepo" : 0,
@@ -97,6 +85,9 @@ def write_to_file(output,obj):
 def radiatorPump():
     with open(path,"r") as json_file:
       data = json.load(json_file)
+    with open(temperaturefile) as json_file:
+      temperature = json.load(json_file)
+    data["temperature"]=temperature
     user_intention =  int(data["status"]["Felso_futes"]) == 1 \
             or int(data["status"]["Also_futes"]) == 1
     demand_by_temperature = int(data["status"]["internal_temperature_ok"]) != 1
@@ -111,6 +102,9 @@ def radiatorPump():
 def fillPuffer():
     with open(path) as json_file:
       data = json.load(json_file)
+    with open(temperaturefile) as json_file:
+      temperature = json.load(json_file)
+    data["temperature"]=temperature
     turn_off_temp = min(max(60,float(data["temperature"]["Puffer4"])+5),80)
     turn_on_temp = min((turn_off_temp + 10),92)
 
@@ -139,6 +133,9 @@ def gazKazan():
     
     with open(path) as json_file:
        data = json.load(json_file)
+    with open(temperaturefile) as json_file:
+      temperature = json.load(json_file)
+    data["temperature"]=temperature
     #Gazkazan kikapcsolasa, ha nincs
     if (
             (int(data["status"]["internal_temperature_ok"]) == 1
@@ -164,12 +161,6 @@ def gazKazan():
     write_to_file(data,None)
 
 while True:
-  device_folders = glob.glob(base_dir + '28*')
-  for df in device_folders:
-      keystring = df.split("-")[-1]
-      key = sensors.get(keystring) 
-      temporary[key] = str(read_temp(df))
-  write_to_file(temporary,"temperature")
   fillPuffer()
   radiatorPump()
   gazKazan()

@@ -14,6 +14,7 @@ Puffer3: {{ data["temperature"]["Puffer3"] }} </br>
 Puffer4: {{ data["temperature"]["Puffer4"] }} </br>
 Fűtés előre: {{ data["temperature"]["Futes_elore"] }} </br>
 Fűtés vissza: {{ data["temperature"]["Futes_vissza"] }} </br>
+Fűtési status: {{ data["status"]["Also_futes"] }} </br>
 
 
 {% if  data["status"]["Melegviz"] == "1"  %}
@@ -25,21 +26,6 @@ Fűtés vissza: {{ data["temperature"]["Futes_vissza"] }} </br>
 
 <hr>
 Semmit nem kell csinálni, csak rakni a kazánt
-<!--
-Üzemmód (csak akkor lehet átváltani, ha a kazánházban kézzel átállítottad a rendszert gázfűtésre):
-{% if  data["status"]["Gazfutes"] == 1  %}
-    GÁZ
-{% else %}
-    FAFŰTÉS
-{% endif %}
-
-{% if  data["status"]["Gazfutes"] == 1  %}
-    <a href="/control/uzemmod/0">Átváltás fafűtésre</a>
-{% else %}
-    <a href="/control/uzemmod/1">Átváltás gázfűtésre</a>
-{% endif %}
-
--->
 <hr>
 <a href="/tempupdateform">Hőmérséklet módosítása</a>
 </br>
@@ -47,7 +33,7 @@ Semmit nem kell csinálni, csak rakni a kazánt
 
 <hr>
 Főkapcsoló:
-{% if  data["status"]["internal_temperature_ok"] == 0  %}
+{% if  data["status"]["internal_temperature_ok"] == 1  %}
     BEKAPCSOLT <a href="/fokapcsolo/1">Kikapcsolás</a>
 {% else %}
     KIKAPCSOLT <a href="/fokapcsolo/0">Bekapcsolás</a>

@@ -60,7 +60,7 @@ def tempupdateformpost():
 def change_control(szint, beki):
     with open(path) as json_file:
       data = json.load(json_file)
-    data["status"][szint] = beki
+    data["status"][szint] = int(beki)
     with open(path,"w") as outfile:
         json.dump(data, outfile)
 
@@ -70,7 +70,7 @@ def change_control(szint, beki):
 def fokapcsolo_change(beki):
     with open(path) as json_file:
       data = json.load(json_file)
-    data["status"]["internal_temperature_ok"] = beki
+    data["status"]["internal_temperature_ok"] = int(beki)
     with open(path,"w") as outfile:
         json.dump(data, outfile)
 
