@@ -33,11 +33,15 @@ def tempupdateformpage():
 
 @app.route('/hmvtemperature', methods=['POST'])
 def hmvtemperature():
-  temp=request.json.get('hmvtemperature')
+  temp=request.json.get('melegviz')
+  fustgaz=request.json.get('fustgaz')
+  kazanhaz_belso=request.json.get('kazanhaz_belso')
   print("Hmvtemp: " + temp)
   with open(hmv) as json_file:
     data = json.load(json_file)
   data["hmv"] = temp
+  data["fustgaz"] = fustgaz
+  data["kazanhaz_belso"] = kazanhaz_belso
 
   with open(hmv,"w") as outfile:
       json.dump(data, outfile)

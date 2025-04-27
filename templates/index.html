@@ -15,7 +15,8 @@ Puffer4: {{ data["temperature"]["Puffer4"] }} </br>
 Fűtés előre: {{ data["temperature"]["Futes_elore"] }} </br>
 Fűtés vissza: {{ data["temperature"]["Futes_vissza"] }} </br>
 Fűtési status: {{ data["status"]["Also_futes"] }} </br>
-
+Kazánház hőmérséklet: {{hmvdata["kazanhaz_belso"]}} </br>
+Füstgáz: {{hmvdata["fustgaz"]}} </br>
 
 {% if  data["status"]["Melegviz"] == "1"  %}
 <a href="/control/melegviz/0" class="btn btn-danger">Melegvíz ki ({{ hmvdata["hmv"] }})  &deg;C</a>
@@ -33,7 +34,7 @@ Semmit nem kell csinálni, csak rakni a kazánt
 
 <hr>
 Főkapcsoló:
-{% if  data["status"]["internal_temperature_ok"] == 1  %}
+{% if  data["status"]["internal_temperature_ok"] == 0  %}
     BEKAPCSOLT <a href="/fokapcsolo/1">Kikapcsolás</a>
 {% else %}
     KIKAPCSOLT <a href="/fokapcsolo/0">Bekapcsolás</a>

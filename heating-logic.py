@@ -105,7 +105,8 @@ def fillPuffer():
     with open(temperaturefile) as json_file:
       temperature = json.load(json_file)
     data["temperature"]=temperature
-    turn_off_temp = min(max(60,float(data["temperature"]["Puffer4"])+5),80)
+    turn_off_temp = min(max(65,float(data["temperature"]["Puffer4"])+5),80)
+    turn_off_temp_new = min(max(65,float(data["temperature"]["Puffer1"])+5),80)
     turn_on_temp = min((turn_off_temp + 10),92)
 
     logger.info("Puffertolto off temp: " + str(turn_off_temp))
