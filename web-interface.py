@@ -8,8 +8,8 @@ import syslog
 
 app = Flask(__name__)
 
-path = "/home/pi/code/system-json.txt"
-hmv = "/home/pi/code/hmvdata.json"
+path = "/home/patye/futes/system-json.txt"
+hmv = "/home/patye/futes/hmvdata.json"
 def getactual():
 
   with open(path) as json_file:

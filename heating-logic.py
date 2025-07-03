@@ -19,11 +19,11 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
+#os.system('modprobe w1-gpio')
+#os.system('modprobe w1-therm')
 
-path = "/home/pi/code/system-json.txt"
-temperaturefile = "/home/pi/code/temperature.json"
+path = "/home/patye/futes/system-json.txt"
+temperaturefile = "/home/patye/futes/temperature.json"
 temperature = {
         
         "Kazan_kilepo" : 0,
@@ -71,7 +71,7 @@ def read_temp(dev):
 
 def write_to_file(output,obj):
   if (obj is None):
-    f=open("/home/pi/code/system-json.txt","w+")
+    f=open("/home/patye/futes/system-json.txt","w+")
     f.write(json.dumps(output))
     f.close()
   else:
@@ -85,9 +85,9 @@ def write_to_file(output,obj):
 def radiatorPump():
     with open(path,"r") as json_file:
       data = json.load(json_file)
-    with open(temperaturefile) as json_file:
-      temperature = json.load(json_file)
-    data["temperature"]=temperature
+  #  with open(temperaturefile) as json_file:
+  #    temperature = json.load(json_file)
+  #  data["temperature"]=temperature
     user_intention =  int(data["status"]["Felso_futes"]) == 1 \
             or int(data["status"]["Also_futes"]) == 1
     demand_by_temperature = int(data["status"]["internal_temperature_ok"]) != 1
@@ -102,9 +102,9 @@ def radiatorPump():
 def fillPuffer():
     with open(path) as json_file:
       data = json.load(json_file)
-    with open(temperaturefile) as json_file:
-      temperature = json.load(json_file)
-    data["temperature"]=temperature
+#  with open(temperaturefile) as json_file:
+#      temperature = json.load(json_file)
+#    data["temperature"]=temperature
     turn_off_temp = min(max(65,float(data["temperature"]["Puffer4"])+5),80)
     turn_off_temp_new = min(max(65,float(data["temperature"]["Puffer1"])+5),80)
     turn_on_temp = min((turn_off_temp + 10),92)
@@ -134,9 +134,9 @@ def gazKazan():
     
     with open(path) as json_file:
        data = json.load(json_file)
-    with open(temperaturefile) as json_file:
-      temperature = json.load(json_file)
-    data["temperature"]=temperature
+#    with open(temperaturefile) as json_file:
+#      temperature = json.load(json_file)
+#    data["temperature"]=temperature
     #Gazkazan kikapcsolasa, ha nincs
     if (
             (int(data["status"]["internal_temperature_ok"]) == 1

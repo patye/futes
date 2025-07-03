@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import serial
 import time
 import json
@@ -31,7 +30,7 @@ temperature = {
 prevtime = 0
 
 def write_to_file(output):
-  f=open("/home/pi/code/temperature.json","w+")
+  f=open("/home/patye/futes/temperature.json","w+")
   f.write(json.dumps(output, separators=(',',':')))
   f.close()
 

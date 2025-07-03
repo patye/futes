@@ -62,7 +62,7 @@ def change_zona(szint, ertek):
 
 
 while True:
-    path = "/home/pi/code/system-json.txt"
+    path = "/home/patye/futes/system-json.txt"
     try:    
       with open(path) as json_file:
         data = json.load(json_file)
