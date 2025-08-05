@@ -25,6 +25,7 @@ logger.addHandler(file_handler)
 path = "/home/patye/futes/system-json.txt"
 temperaturefile = "/home/patye/futes/temperature.json"
 hmvfile = "/home/patye/futes/hmvdata.json"
+hysteresis_up = False
 temperature = {
         
         "Kazan_kilepo" : 0,
@@ -134,15 +135,15 @@ def fillPuffer():
 
 
 def hmv_decision(hmv_on, temperature):
-    boiler = False
 
+    global hysteresis_up
     hmv_hysteresis = {
         "temp_low": 35,
         "temp_high": 55
     }
 
     logger.info("Temperature is: " + str(temperature))
-    logger.info("Boiler is: " + str(boiler))
+    logger.info("Hysteresis up is: " + str(hysteresis_up))
     logger.info("HMV on is: " + str(hmv_on))
     logger.info("HMV hysteresis high value is : " + str(hmv_hysteresis["temp_high"]))
     logger.info("Hmv hysteresis low value: " + str(hmv_hysteresis["temp_low"]))
@@ -150,14 +151,18 @@ def hmv_decision(hmv_on, temperature):
     if hmv_on and (temperature >= hmv_hysteresis["temp_high"]):
         boiler = False
         logger.info("Boiler decision is: %s", boiler)
+        hysteresis_up = False
     elif hmv_on and (temperature <= hmv_hysteresis["temp_low"]):
         boiler = True
+        hysteresis_up = True
         logger.info("Boiler decision is: %s", boiler)
+    elif hmv_on and hmv_hysteresis:
+        boiler = True
     return boiler
 
 
 def gazKazan():
-    
+
     with open(path) as json_file:
        data = json.load(json_file)
     with open(temperaturefile) as json_file:
