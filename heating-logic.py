@@ -27,6 +27,7 @@ logger.addHandler(file_handler)
 
 path = "/home/patye/futes/system-json.txt"
 temperaturefile = "/home/patye/futes/temperature.json"
+hmvfile = "/home/patye/futes/hmvdata.json"
 temperature = {
         
         "Kazan_kilepo" : 0,
@@ -141,6 +142,8 @@ def gazKazan():
        data = json.load(json_file)
     with open(temperaturefile) as json_file:
       temperature = json.load(json_file)
+    with open(hmvfile) as json_file:
+        hmv = json.load(json_file)
     data["temperature"]=temperature
 
     #Gazkazan kikapcsolasa, ha nincs sem melegviz igeny, sem futesi igeny
@@ -159,7 +162,7 @@ def gazKazan():
 
     #Gazkazan be, ha van melegvizigeny es a hiszterezis is ezt kivanja
 
-    data["status"]["Gazkazan"] = int(hmv_decision.hmv_decision(int(data["status"]["Melegviz"] == 1)))
+    data["status"]["Gazkazan"] = int(hmv_decision.hmv_decision(int(data["status"]["Melegviz"] == 1),hmv["hmv"]))
     write_to_file(data,None)
 
 while True:
