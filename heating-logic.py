@@ -159,6 +159,8 @@ def hmv_decision(hmv_on, temperature):
     elif hmv_on and hmv_hysteresis:
         logger.info("Boiler decision is: %s", True)
         return True
+    else:
+        return False
 
 
 
