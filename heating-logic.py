@@ -6,6 +6,9 @@ import sys
 import json
 import logging
 import calendar
+from hmv_decision import HmvDecision
+
+hmv_decision = HmvDecision()
 
 logger = logging.getLogger("heating-logic")
 logger.setLevel(logging.INFO)
@@ -130,35 +133,37 @@ def fillPuffer():
         logger.info("Puffertolto kikapcs, mert letelt  a timeout")
 
     write_to_file(data,None)
+
+
+def melegviz():
+    with open(hmv) as json_file:
+        hmvdata = json.load(json_file)
+
 def gazKazan():
     
     with open(path) as json_file:
        data = json.load(json_file)
-#    with open(temperaturefile) as json_file:
-#      temperature = json.load(json_file)
-#    data["temperature"]=temperature
-    #Gazkazan kikapcsolasa, ha nincs
-    if (
-            (int(data["status"]["internal_temperature_ok"]) == 1
-            or float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_max"])
-            or int(data["status"]["Gazfutes"]) == 0) \
-            and int(data["status"]["Melegviz"]) == 0
-       ):
-          data["status"]["Gazkazan"] = 0
-      
-      #Puffertöltő kikapcsolás időzítés beállítása (hűti a gázkazánt, kiveszi a maradékhőt)
-    if (
-            int(data["status"]["Gazfutes"]) == 1):  #Csak gázfűtés esetében van rá szükség
-               data["status"]["puffertolto_off_schedule"] = calendar.timegm(time.gmtime())
-               data["status"]["puffertolto_off_trigger"] = 1
-        
-    elif ( int(data["status"]["Gazfutes"]) == 1 and int(data["status"]["internal_temperature_ok"]) == 0 and float(data["temperature"]["Puffer1"]) < int(data["status"]["eloremeno_min"]) ):
-      data["status"]["Gazkazan"] = 1
-    elif (int(data["status"]["Melegviz"] == 1)):
-      data["status"]["Gazkazan"] = 1
-    #  else:
-  #    data["status"]["Gazkazan"] = 0 
+    with open(temperaturefile) as json_file:
+      temperature = json.load(json_file)
+    data["temperature"]=temperature
 
+    #Gazkazan kikapcsolasa, ha nincs sem melegviz igeny, sem futesi igeny
+    # if (
+    #         (int(data["status"]["internal_temperature_ok"]) == 1
+    #         or float(data["temperature"]["Puffer1"]) > int(data["status"]["eloremeno_max"])
+    #         or int(data["status"]["Gazfutes"]) == 0
+    #         or hmv_decision.hmv_decision())
+    #         and int(data["status"]["Melegviz"]) == 0
+    #    ):
+    #       data["status"]["Gazkazan"] = 0
+    #
+    #Gazfutes bekapcsolva, a puffer1 nem eri el az elvart eloremeno erteket. #TODO törlendő működési mód
+    # if ( int(data["status"]["Gazfutes"]) == 1 and int(data["status"]["internal_temperature_ok"]) == 0 and float(data["temperature"]["Puffer1"]) < int(data["status"]["eloremeno_min"]) ):
+    #   data["status"]["Gazkazan"] = 1
+
+    #Gazkazan be, ha van melegvizigeny es a hiszterezis is ezt kivanja
+
+    data["status"]["Gazkazan"] = int(hmv_decision.hmv_decision(int(data["status"]["Melegviz"] == 1)))
     write_to_file(data,None)
 
 while True:

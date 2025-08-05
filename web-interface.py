@@ -123,7 +123,7 @@ def melegviz(beki):
     with open(path) as json_file:
         data = json.load(json_file)
     data["status"]["Melegviz"] = beki
-    data["status"]["Gazkazan"] = beki
+    #data["status"]["Gazkazan"] = beki
     with open(path, "w") as outfile:
         json.dump(data, outfile)
     time.sleep(1)
