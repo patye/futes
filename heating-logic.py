@@ -135,10 +135,6 @@ def fillPuffer():
     write_to_file(data,None)
 
 
-def melegviz():
-    with open(hmv) as json_file:
-        hmvdata = json.load(json_file)
-
 def gazKazan():
     
     with open(path) as json_file:
