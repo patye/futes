@@ -3,6 +3,7 @@ import logging
 class HmvDecision:
 
   def hmv_decision(self, hmv_on, temperature):
+      boiler = False
       logger = logging.getLogger()
       logger.setLevel(logging.INFO)
 
@@ -17,7 +18,6 @@ class HmvDecision:
 
       logger.info("Temperature is: " + str(temperature))
 
-      global boiler
       hmv_hysteresis = {
         "temp_low": 35,
         "temp_high": 55
