@@ -6,9 +6,6 @@ import sys
 import json
 import logging
 import calendar
-from hmv_decision import HmvDecision
-
-hmv_decision = HmvDecision()
 
 logger = logging.getLogger("heating-logic")
 logger.setLevel(logging.INFO)
@@ -136,6 +133,29 @@ def fillPuffer():
     write_to_file(data,None)
 
 
+def hmv_decision(hmv_on, temperature):
+    boiler = False
+
+    hmv_hysteresis = {
+        "temp_low": 35,
+        "temp_high": 55
+    }
+
+    logger.info("Temperature is: " + str(temperature))
+    logger.info("Boiler is: " + str(boiler))
+    logger.info("HMV on is: " + str(hmv_on))
+    logger.info("HMV hysteresis high value is : " + str(hmv_hysteresis["temp_high"]))
+    logger.info("Hmv hysteresis low value: " + str(hmv_hysteresis["temp_low"]))
+
+    if hmv_on and temperature >= hmv_hysteresis["temp_high"]:
+        boiler = False
+        logger.info("Boiler is: %s", boiler)
+    elif hmv_on and temperature <= hmv_hysteresis["temp_low"]:
+        boiler = True
+        logger.info("Boiler is: %s", boiler)
+    return boiler
+
+
 def gazKazan():
     
     with open(path) as json_file:
@@ -162,7 +182,7 @@ def gazKazan():
 
     #Gazkazan be, ha van melegvizigeny es a hiszterezis is ezt kivanja
 
-    data["status"]["Gazkazan"] = int(hmv_decision.hmv_decision(int(data["status"]["Melegviz"] == 1),hmv["hmv"]))
+    data["status"]["Gazkazan"] = int(hmv_decision(int(data["status"]["Melegviz"] == 1),hmv["hmv"]))
     write_to_file(data,None)
 
 while True:
