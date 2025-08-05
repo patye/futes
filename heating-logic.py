@@ -149,16 +149,17 @@ def hmv_decision(hmv_on, temperature):
     logger.info("Hmv hysteresis low value: " + str(hmv_hysteresis["temp_low"]))
 
     if hmv_on and (temperature >= hmv_hysteresis["temp_high"]):
-        boiler = False
-        logger.info("Boiler decision is: %s", boiler)
+        logger.info("Boiler decision is: %s", False)
         hysteresis_up = False
+        return False
     elif hmv_on and (temperature <= hmv_hysteresis["temp_low"]):
-        boiler = True
         hysteresis_up = True
-        logger.info("Boiler decision is: %s", boiler)
+        logger.info("Boiler decision is: %s", True)
+        return True
     elif hmv_on and hmv_hysteresis:
-        boiler = True
-    return boiler
+        logger.info("Boiler decision is: %s", True)
+        return True
+
 
 
 def gazKazan():
