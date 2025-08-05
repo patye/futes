@@ -183,8 +183,8 @@ def gazKazan():
     #Gazkazan be, ha van melegvizigeny es a hiszterezis is ezt kivanja
     logger.info("status_melegviz: " + str(data["status"]["Melegviz"]) )
     logger.info("hmv_on is: " + str(int(data["status"]["Melegviz"]) == 1))
-    data["status"]["Gazkazan"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,int(hmv["hmv"])))
-    data["status"]["Hmv_tolto"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,int(hmv["hmv"])))
+    data["status"]["Gazkazan"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,float(hmv["hmv"])))
+    data["status"]["Hmv_tolto"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,float(hmv["hmv"])))
     write_to_file(data,None)
 
 while True:
