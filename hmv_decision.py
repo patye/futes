@@ -16,12 +16,18 @@ class HmvDecision:
       logger.addHandler(file_handler)
 
 
-      logger.info("Temperature is: " + str(temperature))
 
       hmv_hysteresis = {
         "temp_low": 35,
         "temp_high": 55
       }
+
+      logger.info("Temperature is: " + str(temperature))
+      logger.info("Boiler is: " + str(boiler))
+      logger.info("HMV on is: " + str(hmv_on))
+      logger.info("HMV hysteresis high value is : " + str(hmv_hysteresis["temp_high"]))
+      logger.info("Hmv hysteresis low value: " + str(hmv_hysteresis["temp_low"]))
+
       if hmv_on and temperature >= hmv_hysteresis["temp_high"]:
           boiler = False
           logger.info("Boiler is: %s", boiler)
