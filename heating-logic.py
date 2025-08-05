@@ -147,10 +147,10 @@ def hmv_decision(hmv_on, temperature):
     logger.info("HMV hysteresis high value is : " + str(hmv_hysteresis["temp_high"]))
     logger.info("Hmv hysteresis low value: " + str(hmv_hysteresis["temp_low"]))
 
-    if hmv_on and (temperature >= int(hmv_hysteresis["temp_high"])):
+    if hmv_on and (temperature >= hmv_hysteresis["temp_high"]):
         boiler = False
         logger.info("Boiler decision is: %s", boiler)
-    elif hmv_on and (temperature <= int(hmv_hysteresis["temp_low"])):
+    elif hmv_on and (temperature <= hmv_hysteresis["temp_low"]):
         boiler = True
         logger.info("Boiler decision is: %s", boiler)
     return boiler
@@ -183,8 +183,8 @@ def gazKazan():
     #Gazkazan be, ha van melegvizigeny es a hiszterezis is ezt kivanja
     logger.info("status_melegviz: " + str(data["status"]["Melegviz"]) )
     logger.info("hmv_on is: " + str(int(data["status"]["Melegviz"]) == 1))
-    data["status"]["Gazkazan"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,hmv["hmv"]))
-    data["status"]["Hmv_tolto"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,hmv["hmv"]))
+    data["status"]["Gazkazan"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,int(hmv["hmv"])))
+    data["status"]["Hmv_tolto"] = int(hmv_decision(int(data["status"]["Melegviz"]) == 1,int(hmv["hmv"])))
     write_to_file(data,None)
 
 while True:
