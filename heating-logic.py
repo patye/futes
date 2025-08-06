@@ -149,15 +149,15 @@ def hmv_decision(hmv_on, temperature):
     logger.info("Hmv hysteresis low value: " + str(hmv_hysteresis["temp_low"]))
 
     if hmv_on and (temperature >= hmv_hysteresis["temp_high"]):
-        logger.info("Boiler decision is: %s", False)
+        logger.info("Case#1 - Boiler decision is: %s", False)
         hysteresis_up = False
         return False
     elif hmv_on and (temperature <= hmv_hysteresis["temp_low"]):
         hysteresis_up = True
-        logger.info("Boiler decision is: %s", True)
+        logger.info("Case#2 - Boiler decision is: %s", True)
         return True
     elif hmv_on and hmv_hysteresis:
-        logger.info("Boiler decision is: %s", True)
+        logger.info("Case#3 - Boiler decision is: %s", True)
         return True
     else:
         return False
