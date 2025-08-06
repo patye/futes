@@ -199,4 +199,5 @@ while True:
   fillPuffer()
   radiatorPump()
   gazKazan()
+  logger.info("Hysteresis up: " + str(hysteresis_up))
   time.sleep(10)
