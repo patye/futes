@@ -160,6 +160,7 @@ def hmv_decision(hmv_on, temperature):
         logger.info("Case#3 - Boiler decision is: %s", True)
         return True
     else:
+        logger.info("Case#4 - Boiler decision is: %s", False)
         return False
 
 
