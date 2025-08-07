@@ -138,7 +138,7 @@ def hmv_decision(hmv_on, temperature):
 
     global hysteresis_up
     hmv_hysteresis = {
-        "temp_low": 35,
+        "temp_low": 45,
         "temp_high": 55
     }
 
@@ -156,7 +156,7 @@ def hmv_decision(hmv_on, temperature):
         hysteresis_up = True
         logger.info("Case#2 - Boiler decision is: %s", True)
         return True
-    elif hmv_on and hmv_hysteresis:
+    elif hmv_on and hysteresis_up:
         logger.info("Case#3 - Boiler decision is: %s", True)
         return True
     else:
