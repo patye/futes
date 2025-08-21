@@ -70,10 +70,11 @@ while True:
       if (data != previous):
         syslog.syslog("Puffer ertek: " + str(data["status"]["Puffertolto"]))
         syslog.syslog("melegviz tolto: " + str(data["status"]["Melegviz"]))
+        syslog.syslog("hmv tolto: " + str(data["status"]["Hmv_tolto"]))
         myTosr0x.set_relay_position(1,int(data["status"]["Lakas_keringeto"]))
         myTosr0x.set_relay_position(2,int(data["status"]["Puffertolto"]))
         myTosr0x.set_relay_position(3,int(data["status"]["Gazkazan"]))  
-        myTosr0x.set_relay_position(4,int(data["status"]["Melegviz"]))
+        myTosr0x.set_relay_position(4,int(data["status"]["Hmv_tolto"]))
         previous = data
         zona_also  = int(data["status"]["Also_futes"])
         zona_felso = int(data["status"]["Felso_futes"])
