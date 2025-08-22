@@ -47,6 +47,16 @@ def hmvtemperature():
       json.dump(data, outfile)
   return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
+@app.route('/externaltemperature', methods=['POST'])
+def externaltemperature():
+    temp=request.json.get('kulso')
+    print("Externaltemperature: " + temp)
+    with open(hmv) as json_file:
+        data = json.load(json_file)
+    data["kulso"] = temp
+    with open(hmv, "w") as outfile:
+        json.dump(data, outfile)
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 @app.route('/tempupdateformpost', methods=['POST'])
 def tempupdateformpost():

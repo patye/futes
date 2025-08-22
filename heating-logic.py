@@ -1,11 +1,8 @@
 #!/usr/bin/python3
-import os
-import glob
-import time
-import sys
+import calendar
 import json
 import logging
-import calendar
+import time
 
 logger = logging.getLogger("heating-logic")
 logger.setLevel(logging.INFO)
@@ -87,9 +84,6 @@ def write_to_file(output,obj):
 def radiatorPump():
     with open(path,"r") as json_file:
       data = json.load(json_file)
-  #  with open(temperaturefile) as json_file:
-  #    temperature = json.load(json_file)
-  #  data["temperature"]=temperature
     user_intention =  int(data["status"]["Felso_futes"]) == 1 \
             or int(data["status"]["Also_futes"]) == 1
     demand_by_temperature = int(data["status"]["internal_temperature_ok"]) != 1
