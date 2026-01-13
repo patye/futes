@@ -133,7 +133,7 @@ def hmv_decision(hmv_on, temperature):
     global hysteresis_up
     hmv_hysteresis = {
         "temp_low": 45,
-        "temp_high": 55
+        "temp_high": 65
     }
 
     logger.info("Temperature is: " + str(temperature))
@@ -142,7 +142,10 @@ def hmv_decision(hmv_on, temperature):
     logger.info("HMV hysteresis high value is : " + str(hmv_hysteresis["temp_high"]))
     logger.info("Hmv hysteresis low value: " + str(hmv_hysteresis["temp_low"]))
 
-    if hmv_on and (temperature >= hmv_hysteresis["temp_high"]):
+    if hmv_on and temperature <= 0:
+        logger.info("Error, boiler is stopped")
+        return False
+    elif hmv_on and (temperature >= hmv_hysteresis["temp_high"]):
         logger.info("Case#1 - Boiler decision is: %s", False)
         hysteresis_up = False
         return False
